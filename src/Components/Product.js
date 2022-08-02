@@ -1,17 +1,27 @@
 import React,{useState,useEffect} from 'react';
 import { useDispatch } from 'react-redux';
-import { addCart } from '../redux/action';
+import { addCart,delCart } from '../redux/action';
 import Skeleton from 'react-loading-skeleton';
 import { useParams } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 const Product = () => {
     const {id}=useParams();
+    const[cartBtn,setCartbtn]=useState("ADD to Cart");
     const[product,setProduct]=useState([]);
     const[loading,setLoading]=useState(false);
     const dispatch =useDispatch();
     const addProduct =(product) =>{
-        dispatch(addCart(product));
+        
+        if(cartBtn==="Add to Cart"){
+            dispatch(addCart(product))
+            setCartbtn("Remove from Cart")
+        }
+        else{
+            dispatch(delCart(product))
+            setCartbtn("Add to Cart")
+        }
+        
     }
     useEffect(() => {
         const getProduct=async ()=>{
@@ -67,7 +77,7 @@ const Product = () => {
                 <p className="lead">
                     {product.description}
                 </p>
-                <button className="btn btn-outline-dark px-4 py-4" onClick={()=>addProduct(product)}>Add to Cart</button>
+                <button className="btn btn-outline-dark px-2 py-2" onClick={()=>addProduct(product)}>{cartBtn}</button>
                 <NavLink to="/Cart" className="btn btn-dark mx-2 px-3 py-2">Go to Cart</NavLink>
 
             </div>
